@@ -16,11 +16,11 @@ public class Invoice {
   public Invoice() {
     items = new ArrayList<Item>();
   }
-  
+
   public Invoice(ArrayList<Item> initialItems) {
     items = initialItems;
   }
-  
+
   public void addItem(Item item) {
     items.add(item);
   }
@@ -57,13 +57,6 @@ public class Invoice {
     }
     formattedInvoice += formatter.formatFooter();
     return formattedInvoice;
-  }
-
-  // DELETE!!!!!!!
-  public double totalPrice() {
-    PriceCalculator calculator = new PriceCalculator();
-    accept(calculator);
-    return calculator.getTotalPrice();
   }
 
   public void accept(ItemVisitor visitor) {
