@@ -12,13 +12,12 @@ import visitor.PriceCalculator;
 
 import java.text.SimpleDateFormat;
 
-
 /**
  * App to create simple invoices.
  */
 
 public class InvoiceApplication {
-  
+
   public static void main(String[] args) {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss.SSSSSS");
 
@@ -27,12 +26,12 @@ public class InvoiceApplication {
     // long noOfBundles = 5000;
 
     // **************START THE CLOCK!**************
-    long startTime = System.currentTimeMillis();
+    Measure setup = new Measure("setup");
     final Invoice invoice = new Invoice();
     final InvoiceFormatter formatter = new SimpleFormatter();
 
     // Create given number of bundles and add them to invoice
-    for(int i = 0; i < noOfBundles; i++) {
+    for (int i = 0; i < noOfBundles; i++) {
       Bundle starterBundle = new Bundle();
       starterBundle.add(HammerFactory.createLightSteelFramingHammer());
       starterBundle.add(NailFactory.createLargeSteelFramingNails());
@@ -41,18 +40,22 @@ public class InvoiceApplication {
       starterBundle.add(HammerFactory.createHeavySteelSledgeHammer());
       invoice.addItem(starterBundle);
     }
+    setup.finish();
 
     // Format invoice for the customer
+    Measure format = new Measure("format");
     String formattedInvoice = invoice.format(formatter);
+    format.finish();
 
     // Computer data for the Company
+    Measure calc = new Measure("calc");
     NumberOfHammersCalculator numHammersCalculator = new NumberOfHammersCalculator();
     invoice.accept(numHammersCalculator);
     long numberOfHammers = numHammersCalculator.getNumber();
 
     NumberOfUnitsOfSteelCalculator steelUnitsCalculator = new NumberOfUnitsOfSteelCalculator();
     invoice.accept(steelUnitsCalculator);
-    long numberOfUnitsOfSteelRequired =  steelUnitsCalculator.getNumber();
+    long numberOfUnitsOfSteelRequired = steelUnitsCalculator.getNumber();
 
     NumberOfNailsCalculator numNailsCalculator = new NumberOfNailsCalculator();
     invoice.accept(numNailsCalculator);
@@ -63,10 +66,9 @@ public class InvoiceApplication {
     double totalPrice = calculator.getTotalPrice();
 
     // **************STOP THE CLOCK!**************
-    long endTime = System.currentTimeMillis(); 
-    int duration = (int)(endTime - startTime); 
+    calc.finish();
 
-    //System.out.println(formattedInvoice); // print customer invoice
+    // System.out.println(formattedInvoice); // print customer invoice
 
     // Print data for company
     System.out.println("\nData For Company Use");
@@ -78,8 +80,8 @@ public class InvoiceApplication {
     System.out.println("\n");
 
     // Print runtime stats
-    System.out.println("START TIME: " + simpleDateFormat.format(startTime));
-    System.out.println("END TIME:   " + simpleDateFormat.format(endTime));
-    System.out.println("DURATION:   " + duration + " milliseconds");
+    // System.out.println("START TIME: " + simpleDateFormat.format(startTime));
+    // System.out.println("END TIME: " + simpleDateFormat.format(endTime));
+    // System.out.println("DURATION: " + duration + " milliseconds");
   }
 }
